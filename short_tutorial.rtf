@@ -1,0 +1,18 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 The output of the script is two sets of matrices: J_mod and Sigma_mod (save in .npy format). You can  load npy files using numpy load function.\
+These are numpy arrays (high-dimensional matrices) with 4 indices: subject, session, node, node. Indices start at 0 in python.\
+The 5 sessions (or runs) are 2 for rest and 3 for movie.\
+\
+We\'92ll focus on the off-diagonal elements J_mod[i_sub,i_run,i,j] with i!=j, which correspond to the EC strength from node j to node i.\
+\
+Firstly, we want to seek differences between the rest and movie conditions for each condition j -> i. This can be done using Welch\'92s t-test for unequal variance (scipy.stats function ttest_ind with proper option) on two subsets J_mod[:,0:2,i,j] and J_mod[:,2:5,i,j] (flatten the array with numpy ravel or reshape functions). You can collect the p-values for all connections j -> i and identify significant changes with respect to a given threshold of p-values (including multiple-comparison corrections).\
+ROI labels for each region i are in ROI_labels.npy.\
+\
+Secondly, we want to perform classification and attribute session to subjects. We can start with a 1-nearest-neighbor (1NN) classifier equipped with a distance between the EC matrices. We take as distance the inverse of Pearson correlation coefficient, which measures the similarity between matrices (scipy.stats pearsonr function). The idea is to have a database (or train set, reference sessions from which we know the subjects) and a test set to check the performance of the 1NN classifier. For each session to test, the closest session in the database (with respect to the distance, i.e., higher Pearson similarity) gives the putative subject identity.\
+}
