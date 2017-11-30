@@ -8,7 +8,7 @@ The data are:
 - structural connectivity in SC_anat.npy
 - ROI labels in ROI_labels.npy
 
-**If you use this toolbox, please cite the relevant papers below. This script package is a collaborative work with Andrea Insabato, Vicente Pallares, Gorka Zamora-López and Nikos Kouvaris.
+*If you use this toolbox, please cite the relevant papers below. This script package is a collaborative work with Andrea Insabato, Vicente Pallares, Gorka Zamora-López and Nikos Kouvaris.
 
 Data are from: Gilson M, Deco G, Friston K, Hagmann P, Mantini D, Betti V, Romani GL, Corbetta M. Effective connectivity inferred from fMRI transition dynamics during movie viewing points to a balanced reconfiguration of cortical interactions. 
 Neuroimage 2017; doi.org/10.1016/j.neuroimage.2017.09.061
