@@ -56,7 +56,15 @@ for i_rep in range(n_rep):
     perf[i_rep,1] = c_1NN.score(vect_EC[:,run_test_labels,:].reshape([-1,dim_feature]), sub_labels[:,run_test_labels].reshape([-1]))
 
 
-perf = np.array(perf) # change list in array
+
+# plot perf
 print('average/std performance MLR',perf[:,0].mean(),perf[:,0].std())
 print('average/std performance 1NN',perf[:,1].mean(),perf[:,1].std())
+
+import matplotlib.pyplot as pp
+pp.violinplot(perf,positions=[0,1])
+pp.axis(xmin=-0.4,xmax=1.4,ymin=0.5,ymax=1)
+pp.xticks([0,1],['MLR','1NN'],fontsize=8)
+pp.ylabel('accuracy',fontsize=8)
+pp.show()
 
