@@ -1,4 +1,4 @@
-# Whole-brain linear effective connectivity (WBLEC) estimation and intepretation. 
+## Whole-brain linear effective connectivity (WBLEC) estimation and intepretation. 
 
 The script ParameterEstimation.py calculates the spatiotemporal functional connectivity for each session (or run) and subject from the BOLD time series. Then, it calls the model optimization (function in WBLECmodel.py) and stores the model estimates (effective connectivity matrix embedded in the Jacobian J and input variances Sigma) in an array.
 The data are:
