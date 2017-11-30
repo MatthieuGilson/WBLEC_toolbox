@@ -11,7 +11,10 @@ The data are:
 Data are from: Gilson M, Deco G, Friston K, Hagmann P, Mantini D, Betti V, Romani GL, Corbetta M. Effective connectivity inferred from fMRI transition dynamics during movie viewing points to a balanced reconfiguration of cortical interactions. 
 Neuroimage 2017; doi.org/10.1016/j.neuroimage.2017.09.061
 
-Model details in: Gilson M, Moreno-Bote R, Ponce-Alvarez A, Ritter P, Deco G. Estimation of Directed Effective Connectivity from fMRI Functional Connectivity Hints at Asymmetries of Cortical Connectome. PLoS Comput Biol 2016, 12: e1004762; dx.doi.org/10.1371/journal.pcbi.1004762
+Model optimization is described in: Gilson M, Moreno-Bote R, Ponce-Alvarez A, Ritter P, Deco G. Estimation of Directed Effective Connectivity from fMRI Functional Connectivity Hints at Asymmetries of Cortical Connectome. PLoS Comput Biol 2016, 12: e1004762; dx.doi.org/10.1371/journal.pcbi.1004762
+
+Classification procedure is described in: Pallares V, Insabato A, Sanjuan A, Kuehn S, Mantini D, Deco G, Gilson M. Subject- and behavior-specific signatures extracted from fMRI data using whole-brain effective connectivity. Biorxiv, doi.org/10.1101/201624
 
 The classification script uses the scikit.learn library (http://scikit-learn.org)
 
+This script package is a collaborative work with Andrea Insabato, Vicente Pallares, Gorka Zamora-López and Nikos Kouvaris.
