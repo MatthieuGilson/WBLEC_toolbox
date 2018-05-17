@@ -38,7 +38,7 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
         J = -np.eye(N)/tau_x + EC
 
         # calculate FC0 and FC1 for model
-        FC0 = spl.solve_lyapunov(J,-Sigma)
+        FC0 = spl.solve_continuous_lyapunov(J,-Sigma)
         FC1 = np.dot(FC0,spl.expm(J.T))
 
         # matrices of model error
