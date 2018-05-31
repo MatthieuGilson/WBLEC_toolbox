@@ -29,6 +29,10 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
 
     # record best fit (matrix distance between model and empirical FC)
     best_dist = 1e10
+    
+    # scaling coefs for FC0 and FC1
+    a0 = np.linalg.norm(FC1_obj) / (np.linalg.norm(FC0_obj) + np.linalg.norm(FC1_obj))
+    a1 = 1. - a0
 
     stop_opt = False
     i_opt = 0
@@ -38,7 +42,7 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
         J = -np.eye(N)/tau_x + EC
 
         # calculate FC0 and FC1 for model
-        FC0 = spl.solve_continuous_lyapunov(J,-Sigma)
+        FC0 = spl.solve_lyapunov(J,-Sigma)
         FC1 = np.dot(FC0,spl.expm(J.T))
 
         # matrices of model error
@@ -46,7 +50,7 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
         Delta_FC1 = FC1_obj-FC1
 
         # calculate error between model and empirical data for FC0 and FC_tau (matrix distance)
-        dist_FC_tmp = 0.5*(np.sqrt((Delta_FC0**2).sum()/(FC0_obj**2).sum())+np.sqrt((Delta_FC1**2).sum()/(FC1_obj**2).sum()))
+        dist_FC_tmp = 0.5*(np.linalg.norm(Delta_FC0)/np.linalg.norm(FC0_obj)+np.linalg.norm(Delta_FC1)/np.linalg.norm(FC1_obj))
 
         # calculate Pearson correlation between model and empirical data for FC0 and FC_tau
         Pearson_FC_tmp = 0.5*(stt.pearsonr(FC0.reshape(-1),FC0_obj.reshape(-1))[0]+stt.pearsonr(FC1.reshape(-1),FC1_obj.reshape(-1))[0])
@@ -62,7 +66,7 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
             stop_opt = i_opt>50
 
         # Jacobian update
-        Delta_J = np.dot(np.linalg.pinv(FC0),Delta_FC0+np.dot(Delta_FC1,spl.expm(-J.T))).T
+        Delta_J = np.dot(np.linalg.pinv(FC0),a0*Delta_FC0+np.dot(a1*Delta_FC1,spl.expm(-J.T))).T
 
         # update EC (recurrent connectivity)
         EC[mask_EC] += epsilon_EC * Delta_J[mask_EC]
