@@ -1,4 +1,4 @@
-**These script in Python 3.6 are a small package to analyze fMRI signals. It is a collaborative work with Andrea Insabato, Vicente Pallarés, Gorka Zamora-López and Nikos Kouvaris. If you use this toolbox, please cite the relevant papers below.**
+**These scripts in Python 3.6 are a small package to analyze fMRI signals. It is a collaborative work with Andrea Insabato, Vicente Pallarés, Gorka Zamora-López and Nikos Kouvaris. If you use this toolbox, please cite the relevant papers below.**
 
 ## Whole-brain linear effective connectivity (WBLEC) estimation 
 
@@ -15,11 +15,11 @@ The script *Classification.py* compares the performances of two classifiers (mul
 ## References
 
 Data are from: Gilson M, Deco G, Friston K, Hagmann P, Mantini D, Betti V, Romani GL, Corbetta M. Effective connectivity inferred from fMRI transition dynamics during movie viewing points to a balanced reconfiguration of cortical interactions. 
-Neuroimage 2017; doi.org/10.1016/j.neuroimage.2017.09.061
+Neuroimage 2018, 180: 534-546; http://doi.org/10.1016/j.neuroimage.2017.09.061
 
-Model optimization is described in: Gilson M, Moreno-Bote R, Ponce-Alvarez A, Ritter P, Deco G. Estimation of Directed Effective Connectivity from fMRI Functional Connectivity Hints at Asymmetries of Cortical Connectome. PLoS Comput Biol 2016, 12: e1004762; dx.doi.org/10.1371/journal.pcbi.1004762
+Model optimization is described in: Gilson M, Moreno-Bote R, Ponce-Alvarez A, Ritter P, Deco G. Estimation of Directed Effective Connectivity from fMRI Functional Connectivity Hints at Asymmetries of Cortical Connectome. PLoS Comput Biol 2016, 12: e1004762; http://dx.doi.org/10.1371/journal.pcbi.1004762
 
-Classification procedure is described in: Pallares V, Insabato A, Sanjuan A, Kuehn S, Mantini D, Deco G, Gilson M. Subject- and behavior-specific signatures extracted from fMRI data using whole-brain effective connectivity. Biorxiv, doi.org/10.1101/201624
+Classification procedure is described in: Pallarés V, Insabato A, Sanjuan A, Kühn S, Mantini D, Deco G, Gilson M. Subject- and behavior-specific signatures extracted from fMRI data using whole-brain effective connectivity. Neuroimage 2018, 178: 238-254; http://doi.org/10.1016/j.neuroimage.2018.04.070
 
 The classification script uses the scikit.learn library (http://scikit-learn.org)
 
