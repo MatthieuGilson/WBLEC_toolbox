@@ -9,6 +9,7 @@ Created on Thu Nov 23 17:34:37 2017
 def main():
     import os
     import numpy as np
+    import scipy.signal as spsg
     import WBLECmodel
     
     os.system('clear')
@@ -37,9 +38,17 @@ def main():
     ts_emp = np.load('ts_emp.npy')
     print(ts_emp.shape)
 
+    # filtering between 0.01 and 0.1 Hz
+    n_order = 3
+    Nyquist_freq = 0.5 / 2
+    low_f = 0.01 / Nyquist_freq
+    high_f = 0.1 / Nyquist_freq
+    b,a = spsg.iirfilter(n_order,[low_f,high_f],btype='bandpass',ftype='butter')
+
     FC_emp = np.zeros([n_sub,n_run,n_tau,N,N]) # FC = spatiotemporal covariances of BOLD signals
     for i_sub in range(n_sub):
         for i_run in range(n_run):
+            ts_emp[i_sub,i_run,:,:] = spsg.filtfilt(b,a,ts_emp[i_sub,i_run,:,:],axis=1)
             ts_emp[i_sub,i_run,:,:] -= np.outer(ts_emp[i_sub,i_run,:,:].mean(1),np.ones(T)) # center the time series
     for i_sub in range(n_sub):
         for i_run in range(n_run):

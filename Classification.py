@@ -8,7 +8,10 @@ Created on Fri Nov 24 11:46:02 2017
 
 import numpy as np
 import sklearn.linear_model as skllm
+import sklearn.preprocessing as skppr
+import sklearn.pipeline as skppl
 import sklearn.neighbors as sklnn
+import matplotlib.pyplot as pp
 
 
 # load EC matrices, session labels and general parameters
@@ -24,47 +27,61 @@ dim_feature = vect_EC.shape[2] # dimension of vectorized EC
 
 
 # labels of sessions for classification (train+test)
+RM_labels = np.repeat(np.array([0,0,1,1,1],dtype=np.int).reshape([1,-1]), n_sub, axis=0)
 sub_labels = np.repeat(np.arange(n_sub).reshape([-1,1]), n_run, axis=1)
-run_labels = np.repeat(np.arange(n_run).reshape([1,-1]), n_sub, axis=0)
 
 
 # classifier and learning parameters
-c_MLR = skllm.LogisticRegression(C=10000, penalty='l2', multi_class='multinomial', solver='lbfgs')
+c_MLR = skppl.make_pipeline(skppr.StandardScaler(),skllm.LogisticRegression(C=1, penalty='l2', multi_class='multinomial', solver='lbfgs'))
 c_1NN = sklnn.KNeighborsClassifier(n_neighbors=1, algorithm='brute', metric='correlation')
 
-n_rep = 6  # number of repetition of classification procedure
-perf = np.zeros([n_rep,2]) # record classification performance
+n_rep = 20  # number of repetition of classification procedure
+perf = np.zeros([n_rep,2,2]) # record classification performance; last index: 1) rest vs movie; 2) subject identification
 
 
 # perform classification
 for i_rep in range(n_rep):
-    # split run indices in train and test sets
-    run_train_labels = np.zeros([n_run],dtype=bool)
-    run_test_labels = np.ones([n_run],dtype=bool)
-    while run_train_labels.sum()<2:
-        rnd_int = np.random.randint(n_run)
-        if not run_train_labels[rnd_int]:
-            run_train_labels[rnd_int] = True
-            run_test_labels[rnd_int] = False
-    print('train/test sets:',run_train_labels,run_test_labels)
+    # split samples in train and test sets (80% and 20% of subjects, respectively)
+    train_labels = np.ones([n_sub,n_run],dtype=bool)
+    while train_labels.sum()>0.8*n_sub*n_run:
+        train_labels[np.random.randint(n_sub),:] = False
+    test_labels = np.logical_not(train_labels)
+#    print('train/test sets:',train_labels,test_labels)
     
-    # train and test classifiers with subject labels
-    c_MLR.fit(vect_EC[:,run_train_labels,:].reshape([-1,dim_feature]), sub_labels[:,run_train_labels].reshape([-1]))
-    perf[i_rep,0] = c_MLR.score(vect_EC[:,run_test_labels,:].reshape([-1,dim_feature]), sub_labels[:,run_test_labels].reshape([-1]))
+    # train and test classifiers with run labels
+    c_MLR.fit(vect_EC[train_labels,:].reshape([-1,dim_feature]), RM_labels[train_labels].reshape([-1]))
+    perf[i_rep,0,0] = c_MLR.score(vect_EC[test_labels,:].reshape([-1,dim_feature]), RM_labels[test_labels].reshape([-1]))
 
-    c_1NN.fit(vect_EC[:,run_train_labels,:].reshape([-1,dim_feature]), sub_labels[:,run_train_labels].reshape([-1]))
-    perf[i_rep,1] = c_1NN.score(vect_EC[:,run_test_labels,:].reshape([-1,dim_feature]), sub_labels[:,run_test_labels].reshape([-1]))
+    c_1NN.fit(vect_EC[train_labels,:].reshape([-1,dim_feature]), RM_labels[train_labels].reshape([-1]))
+    perf[i_rep,1,0] = c_1NN.score(vect_EC[test_labels,:].reshape([-1,dim_feature]), RM_labels[test_labels].reshape([-1]))
+
+
+    # split samples in train and test sets (2 runs and 3 runs per subject, respectively)
+    train_labels = np.zeros([n_sub,n_run],dtype=bool)
+    while train_labels.sum()<2*n_sub:
+        train_labels[:,np.random.randint(n_run)] = True
+    test_labels = np.logical_not(train_labels)
+#    print('train/test sets:',train_labels,test_labels)
+
+
+    c_MLR.fit(vect_EC[train_labels,:].reshape([-1,dim_feature]), sub_labels[train_labels].reshape([-1]))
+    perf[i_rep,0,1] = c_MLR.score(vect_EC[test_labels,:].reshape([-1,dim_feature]), sub_labels[test_labels].reshape([-1]))
+
+    c_1NN.fit(vect_EC[train_labels,:].reshape([-1,dim_feature]), sub_labels[train_labels].reshape([-1]))
+    perf[i_rep,1,1] = c_1NN.score(vect_EC[test_labels,:].reshape([-1,dim_feature]), sub_labels[test_labels].reshape([-1]))
 
 
 
 # plot perf
-print('average/std performance MLR',perf[:,0].mean(),perf[:,0].std())
-print('average/std performance 1NN',perf[:,1].mean(),perf[:,1].std())
 
-import matplotlib.pyplot as pp
-pp.violinplot(perf,positions=[0,1])
-pp.axis(xmin=-0.4,xmax=1.4,ymin=0.5,ymax=1)
+pp.figure()
+pp.violinplot(perf[:,:,0],positions=np.arange(2)-0.2,widths=[0.3]*2)
+pp.violinplot(perf[:,:,1],positions=np.arange(2)+0.2,widths=[0.3]*2)
+pp.plot([-1,2],[0.4,0.4],'--k')
+pp.axis(xmin=-0.5,xmax=1.5,ymin=0.0,ymax=1)
 pp.xticks([0,1],['MLR','1NN'],fontsize=8)
 pp.ylabel('accuracy',fontsize=8)
+pp.title('left: rest vs movie; right: subject identification',fontsize=8)
+
 pp.show()
 
