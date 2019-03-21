@@ -19,9 +19,12 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
     epsilon_EC = 0.0005
     epsilon_Sigma = 0.05
     
-    min_val_EC = 0. # minimal value for tuned EC elements
-    max_val_EC = 1. # maximal value for tuned EC elements
-    min_val_Sigma = 0.01 # minimal value for tuned Sigma elements
+    # minimal value for tuned EC elements
+    min_val_EC = 0.
+    # maximal value for tuned EC elements
+    max_val_EC = 1.
+    # minimal value for tuned Sigma elements
+    min_val_Sigma = 0.01
     
     # initial EC
     EC = np.zeros([N,N]) # initial connectivity
@@ -30,7 +33,7 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
     # record best fit (matrix distance between model and empirical FC)
     best_dist = 1e10
     
-    # scaling coefs for FC0 and FC1
+    # scaling coefficients for FC0 and FC1 (to compensate that matrix FC1 has elements of smaller magnitude than FC0)
     a0 = np.linalg.norm(FC1_obj) / (np.linalg.norm(FC0_obj) + np.linalg.norm(FC1_obj))
     a1 = 1. - a0
 
