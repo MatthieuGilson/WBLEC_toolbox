@@ -15,9 +15,9 @@ import matplotlib.pyplot as pp
 
 
 #%% load data and general parameters
-n_sub = 22
-n_run = 5
-N = 66
+n_sub = 22 # number of subjects
+n_run = 5  # number of sessions/runs
+N = 66 # number of ROIs
 
 # load EC matrices and perform z-scoring within each session to obtain the ranking between EC connections
 mask_EC = np.load('model_param/mask_EC.npy')
@@ -61,58 +61,58 @@ perf = np.zeros([n_rep,2,2,3])
 for i_rep in range(n_rep):
     # train and test classifiers to discriminate sessions (rest versus movie, 4 tasks)
     # split samples in train and test sets (80% and 20% of subjects, respectively)
-    train_labels = np.ones([n_sub,n_run],dtype=bool)
-    while train_labels.sum()>0.8*n_sub*n_run:
-        train_labels[np.random.randint(n_sub),:] = False
-    test_labels = np.logical_not(train_labels)
-#    print('train/test sets:',train_labels,test_labels)
+    train_ind = np.ones([n_sub,n_run],dtype=bool)
+    while train_ind.sum()>0.8*n_sub*n_run:
+        train_ind[np.random.randint(n_sub),:] = False
+    test_ind = np.logical_not(train_ind)
+#    print('train/test sets:',train_ind,test_ind)
 
     # rest versus movie    
-    c_MLR.fit(vect_EC[train_labels,:], RM_labels[train_labels])
-    perf[i_rep,0,0,0] = c_MLR.score(vect_EC[test_labels,:], RM_labels[test_labels])
+    c_MLR.fit(vect_EC[train_ind,:], RM_labels[train_ind])
+    perf[i_rep,0,0,0] = c_MLR.score(vect_EC[test_ind,:], RM_labels[test_ind])
 
-    c_1NN.fit(vect_EC[train_labels,:], RM_labels[train_labels])
-    perf[i_rep,0,1,0] = c_1NN.score(vect_EC[test_labels,:], RM_labels[test_labels])
+    c_1NN.fit(vect_EC[train_ind,:], RM_labels[train_ind])
+    perf[i_rep,0,1,0] = c_1NN.score(vect_EC[test_ind,:], RM_labels[test_ind])
 
-    c_MLR.fit(vect_FC[train_labels,:], RM_labels[train_labels])
-    perf[i_rep,1,0,0] = c_MLR.score(vect_FC[test_labels,:], RM_labels[test_labels])
+    c_MLR.fit(vect_FC[train_ind,:], RM_labels[train_ind])
+    perf[i_rep,1,0,0] = c_MLR.score(vect_FC[test_ind,:], RM_labels[test_ind])
 
-    c_1NN.fit(vect_FC[train_labels,:], RM_labels[train_labels])
-    perf[i_rep,1,1,0] = c_1NN.score(vect_FC[test_labels,:], RM_labels[test_labels])
+    c_1NN.fit(vect_FC[train_ind,:], RM_labels[train_ind])
+    perf[i_rep,1,1,0] = c_1NN.score(vect_FC[test_ind,:], RM_labels[test_ind])
 
     # 4 tasks
-    c_MLR.fit(vect_EC[train_labels,:], run_labels[train_labels])
-    perf[i_rep,0,0,1] = c_MLR.score(vect_EC[test_labels,:], run_labels[test_labels])
+    c_MLR.fit(vect_EC[train_ind,:], run_labels[train_ind])
+    perf[i_rep,0,0,1] = c_MLR.score(vect_EC[test_ind,:], run_labels[test_ind])
 
-    c_1NN.fit(vect_EC[train_labels,:], run_labels[train_labels])
-    perf[i_rep,0,1,1] = c_1NN.score(vect_EC[test_labels,:], run_labels[test_labels])
+    c_1NN.fit(vect_EC[train_ind,:], run_labels[train_ind])
+    perf[i_rep,0,1,1] = c_1NN.score(vect_EC[test_ind,:], run_labels[test_ind])
 
-    c_MLR.fit(vect_FC[train_labels,:], run_labels[train_labels])
-    perf[i_rep,1,0,1] = c_MLR.score(vect_FC[test_labels,:], run_labels[test_labels])
+    c_MLR.fit(vect_FC[train_ind,:], run_labels[train_ind])
+    perf[i_rep,1,0,1] = c_MLR.score(vect_FC[test_ind,:], run_labels[test_ind])
 
-    c_1NN.fit(vect_FC[train_labels,:], run_labels[train_labels])
-    perf[i_rep,1,1,1] = c_1NN.score(vect_FC[test_labels,:], run_labels[test_labels])
+    c_1NN.fit(vect_FC[train_ind,:], run_labels[train_ind])
+    perf[i_rep,1,1,1] = c_1NN.score(vect_FC[test_ind,:], run_labels[test_ind])
 
 
     # train and test classifiers to identify subjects
     # split samples in train and test sets (2 runs and 3 runs per subject, respectively)
-    train_labels = np.zeros([n_sub,n_run],dtype=bool)
-    while train_labels.sum()<2*n_sub:
-        train_labels[:,np.random.randint(n_run)] = True
-    test_labels = np.logical_not(train_labels)
-#    print('train/test sets:',train_labels,test_labels)
+    train_ind = np.zeros([n_sub,n_run],dtype=bool)
+    while train_ind.sum()<2*n_sub:
+        train_ind[:,np.random.randint(n_run)] = True
+    test_ind = np.logical_not(train_ind)
+#    print('train/test sets:',train_ind,test_ind)
 
-    c_MLR.fit(vect_EC[train_labels,:], sub_labels[train_labels])
-    perf[i_rep,0,0,2] = c_MLR.score(vect_EC[test_labels,:], sub_labels[test_labels])
+    c_MLR.fit(vect_EC[train_ind,:], sub_labels[train_ind])
+    perf[i_rep,0,0,2] = c_MLR.score(vect_EC[test_ind,:], sub_labels[test_ind])
 
-    c_1NN.fit(vect_EC[train_labels,:], sub_labels[train_labels])
-    perf[i_rep,0,1,2] = c_1NN.score(vect_EC[test_labels,:], sub_labels[test_labels])
+    c_1NN.fit(vect_EC[train_ind,:], sub_labels[train_ind])
+    perf[i_rep,0,1,2] = c_1NN.score(vect_EC[test_ind,:], sub_labels[test_ind])
 
-    c_MLR.fit(vect_FC[train_labels,:], sub_labels[train_labels])
-    perf[i_rep,1,0,2] = c_MLR.score(vect_FC[test_labels,:], sub_labels[test_labels])
+    c_MLR.fit(vect_FC[train_ind,:], sub_labels[train_ind])
+    perf[i_rep,1,0,2] = c_MLR.score(vect_FC[test_ind,:], sub_labels[test_ind])
 
-    c_1NN.fit(vect_FC[train_labels,:], sub_labels[train_labels])
-    perf[i_rep,1,1,2] = c_1NN.score(vect_FC[test_labels,:], sub_labels[test_labels])
+    c_1NN.fit(vect_FC[train_ind,:], sub_labels[train_ind])
+    perf[i_rep,1,1,2] = c_1NN.score(vect_FC[test_ind,:], sub_labels[test_ind])
 
 
 
