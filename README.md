@@ -12,6 +12,8 @@ The data are:
 
 The script *Classification.py* compares the performances of two classifiers (multinomial linear regressor and 1-nearest-neighbor) in identifying subjects from EC taken as a biomarker.
 
+The script *FeatureSelection.py* performs recursive feature elimination to identify the most informative EC connections for the rest-movie classification. It compares the resulting ranking for EC connections to the p-values obtained with statistical testing.
+
 ## References
 
 Data are from: Gilson M, Deco G, Friston K, Hagmann P, Mantini D, Betti V, Romani GL, Corbetta M. Effective connectivity inferred from fMRI transition dynamics during movie viewing points to a balanced reconfiguration of cortical interactions. 
