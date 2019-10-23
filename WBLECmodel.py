@@ -69,7 +69,7 @@ def optimize(FC0_obj,FC1_obj,tau_x,mask_EC,mask_Sigma):
             stop_opt = i_opt>50
 
         # Jacobian update
-        Delta_J = np.dot(np.linalg.pinv(FC0),-a0*Delta_FC0+np.dot(a1*Delta_FC1,spl.expm(-J.T))).T
+        Delta_J = np.dot(np.linalg.pinv(FC0),a0*Delta_FC0+np.dot(a1*Delta_FC1,spl.expm(-J.T))).T
 
         # update EC (recurrent connectivity)
         EC[mask_EC] += epsilon_EC * Delta_J[mask_EC]
