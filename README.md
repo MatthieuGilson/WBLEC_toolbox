@@ -1,4 +1,6 @@
-**These scripts in Python 3.6 are a small package to analyze fMRI signals. It is a collaborative work with Andrea Insabato, Vicente Pallarés, Gorka Zamora-López and Nikos Kouvaris. If you use this toolbox, please cite the relevant papers below.**
+**These scripts have now been integrated in a toolbox, we recommend using the newer version:https://github.com/mb-BCA/notebooks_review2019**
+
+**These scripts in Python 3 are a small package to analyze fMRI signals. It is a collaborative work with Andrea Insabato, Vicente Pallarés, Gorka Zamora-López and Nikos Kouvaris. If you use this toolbox, please cite the relevant papers below.**
 
 ## Whole-brain linear effective connectivity (WBLEC) estimation 
 
